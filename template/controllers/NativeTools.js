@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import Share from 'react-native-share';
 
-class Tools {
+class NativeTools {
     constructor() {}
 
     alert(title, text) {
@@ -156,4 +156,4 @@ class Tools {
       };
 }
 
-module.exports = Tools
+module.exports = NativeTools

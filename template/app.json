@@ -1,4 +1,20 @@
 {
   "name": "ProjectName",
-  "displayName": "ProjectName"
+  "displayName": "ProjectName",
+  "appUrl": "https://easyhorse.co.uk/zqtest",
+  "scheme": "easyhorseapp://",
+  "keys": {
+    "oneSignalAppId": "0675c400-8062-45e2-8ed3-0fbb862a0ef6",
+    "revenueCatGoogleApiKey": "goog_WabpZPfHxvcVzjbvgaARzHMZoYB",
+    "revenueCatAppleApiKey": "appl_bunuZXmPvwChTVBROVtoiqtFFSv"
+  },
+  "appUI": {
+    "fullScreen": true,
+    "showStatusBar": true
+  },
+  "bootsplash": {
+    "backgroundColor": "#ffffff",
+    "resizeMode": "contain",
+    "logoWidth": 200
+  }
 }
