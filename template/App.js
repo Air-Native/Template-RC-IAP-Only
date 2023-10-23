@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import {
-  Alert,
   BackHandler,
   StyleSheet,
   View,
@@ -92,13 +91,13 @@ class App extends Component {
       Purchases.enableDebugLogs();
 
       this.invoke
-        .define('logInUser', this.state.Purchases.logInUser)
-        .define('checkUser', this.state.Purchases.userHasActiveSubscriptions);
+        .define('logInUser', Purchases.logInUser)
+        .define('checkUser', Purchases.userHasActiveSubscriptions);
 
     }
 
     if (AirNativeContacts) {
-      this.invoke.define('getContacts', this.getContacts);
+      this.invoke.define('getContacts', new AirNativeContacts()?.getContacts);
     }
 
     /** Player */
@@ -128,8 +127,8 @@ class App extends Component {
 
     /** End tools */
 
-    this.invoke.define('biometrycScan', this.authCurrent);
-    this.invoke.define('stopScaner', this.stopScaner);
+    this.invoke.define('biometrycScan', Location.startScanner);
+    this.invoke.define('stopScaner', Location.stopScanner);
 
 
     /** OneSignal */
