@@ -1,8 +1,8 @@
 {
-  "name": "air-native-template-full",
+  "name": "air-native-template-rc-iap-only",
   "version": "1.0.0",
   "description": "React Native Template",
-  "repository": "git@github.com:AirNative/RNTemplateFull.git",
+  "repository": "git@github.com:AirNative/Template-RC-IAP-Only.git",
   "author": "Dmitrii Vasiliev <slimecube98@gmail.com>",
   "license": "MIT"
 }
