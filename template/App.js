@@ -123,7 +123,8 @@ class App extends Component {
       .define('share', Tools.share)
       .define('setStatusBarColor', Tools.setStatusBarColor)
       .define('getDeviceOS', Tools.getOS)
-      .define('getPermissionsUser', Tools.getPermissionsUser);
+      .define('getPermissionsUser', Tools.getPermissionsUser)
+      .define('getReview', Tools.getReview);
 
     /** End tools */
 

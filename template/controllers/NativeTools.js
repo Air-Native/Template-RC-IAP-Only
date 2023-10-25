@@ -7,6 +7,7 @@ import {
     PermissionsAndroid
 } from "react-native";
 import Share from 'react-native-share';
+import InAppReview from 'react-native-in-app-review';
 
 class NativeTools {
     constructor() {}
@@ -154,6 +155,19 @@ class NativeTools {
           );
         }
       };
+
+    getReview = async () => {
+        const reviewAvailable = InAppReview.isAvailable();
+        if (reviewAvailable) {
+            InAppReview.RequestInAppReview()
+              .then((hasFlowFinishedSuccessfully) => {
+                  console.log("InAppReview Successfully: ", hasFlowFinishedSuccessfully);
+              })
+              .catch((error) => {
+                  console.warn("InAppReview Error: ", error);
+              });
+        }
+    }
 }
 
 module.exports = NativeTools

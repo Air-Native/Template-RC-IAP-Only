@@ -6,7 +6,7 @@ class GeoLocation {
         this.invoke = null;
         this.watchID = null;
         this.event = (name) => console.warn('Function is not defined');
-		this.state = (name, value) => console.warn('Function is not defined');
+		    this.state = (name, value) => console.warn('Function is not defined');
     }
 
     geoSuccess = (position) => {
