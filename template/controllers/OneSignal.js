@@ -1,31 +1,42 @@
 /* eslint-disable */
 import OneSignal from 'react-native-onesignal';
+import * as Config from '../app.json';
 
-class Notifications {
-    constructor(appId){
-        this.OneSignal = OneSignal;
-        this.init(appId)
+const isInitialized = false;
+
+const init = () => {
+	try {
+		const appId = Config?.keys?.oneSignalAppId;
+
+		if (!appId) console.error('appId is not defined in app.json');
+
+		OneSignal.setAppId(appId);
+        isInitialized = true;
+	} catch (error) {
+		console.error('OneSignal:', error.message);
+	}
+};
+
+const getDeviceId = async () => {
+    if (!isInitialized) init();
+    const state = await OneSignal.getDeviceState();
+    if (state.isSubscribed === false) {
+        OneSignal.addTrigger('prompt_ios', 'true');
     }
-
-    init(appId){
-        this.OneSignal.setAppId(appId);
-    }
-
-    getDeviceId = async () => {
-        var state = await this.OneSignal.getDeviceState();
-        if (state.isSubscribed === false) {
-          OneSignal.addTrigger('prompt_ios', 'true');
-        }
-        return state;
-    };
-
-    showPrompt = () => {
-        OneSignal.getDeviceState().then((data) => {
-          if (data.isSubscribed == false) {
-            OneSignal.addTrigger('prompt_ios', 'true');
-          }
-        });
-      };
+    return state;
 }
 
-module.exports = Notifications;
+const showPrompt = () => {
+    if (!isInitialized) init();
+    OneSignal.getDeviceState().then((data) => {
+        if (data.isSubscribed == false) {
+            OneSignal.addTrigger('prompt_ios', 'true');
+        }
+    });
+}
+
+module.exports = {
+    init,
+    getDeviceId,
+    showPrompt,
+};

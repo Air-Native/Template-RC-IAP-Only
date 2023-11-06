@@ -2,71 +2,58 @@
 import { Platform } from "react-native";
 import Purchases from "react-native-purchases";
 
-/**
- * RevenueCat
- * @AppleApiKey: string
- * @GoogleApiKey: string
- */
-class RevenueCat {
-    constructor(appleApiKey, googleApiKey) {
-        this.apiKey = (Platform.OS === 'android') ? googleApiKey : appleApiKey;
-        this.configured = false;
-        this.userId = null;
-        this.customerInfo = null;
-    }
+import * as Config from '../app.json';
 
-    enableDebugLogs() {
-        Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
-    }
+const apiKey = (Platform.OS === 'android') ? Config.keys.revenueCatGoogleApiKey : Config.keys.revenueCatAppleApiKey;
+let configured = false;
+let userId = null;
+let customerInfo = null;
 
-    async setup() {
-        try {
-            await Purchases.configure({ apiKey: this.apiKey });
-            this.configured = true;
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
-    async logInUser(userId) {
-        this.userId = userId;
-        await Purchases.logIn(userId);
-    }
-
-    async checkSubscriptionsStatus() {
-        try {
-            this.customerInfo = await Purchases.getCustomerInfo();
-            console.log('Customer Info', this.customerInfo);
-            // access latest customerInfo
-          } catch (e) {
-           // Error fetching customer info
-           console.error(e);
-          }
-    }
-
-    async userHasActiveSubscriptions() {
-        await this.checkSubscriptionsStatus();
-        return Object.entries(customerInfo.entitlements.active).length
-    }
-
-    async getOfferings() {
-        try {
-            const offerings = await Purchases.getOfferings();
-            console.log(offerings)
-            return offerings;
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
-    async purchase(offering, productId) {
-        try {
-            await Purchases.purchaseStoreProduct(productId);
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
+const enableDebugLogs = () => {
+    Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
 }
 
-module.exports = RevenueCat;
+const logInUser = async (appUserID) => {
+    try {
+        console.log('Log IN User', appUserID)
+        userId = appUserID;
+        Purchases.configure({ apiKey, appUserID });
+        configured = true;
+    } catch (error) {
+        console.error('Revenue Cat: ', error.message)
+    }
+}
+
+const purchase = async (offeringName, productName) => {
+    try {
+        console.info('USER_ID', userId)
+        const offerings = await Purchases.getOfferings();
+        console.log('All offerings', offerings.all)
+        const selectedOffering = offerings.all?.[offeringName]
+
+        if (!selectedOffering?.availablePackages?.length) throw new Error('Wrong offering name')
+        console.info('Selected offering:', JSON.stringify(selectedOffering.availablePackages))
+
+        const selectedProduct = selectedOffering.availablePackages.find( product => product.product.identifier === productName)
+        if (!selectedProduct) throw new Error('Wrong product name')
+
+        console.info('Selected product: ', selectedProduct)
+        const {customerInfo, productIdentifier} = await Purchases.purchasePackage(selectedProduct);
+        console.log('Customer Info:', customerInfo)
+    } catch (e) {
+        console.error('Purchase error: ', e);
+    }
+}
+
+const userHasActiveSubscriptions = async (userId) => {
+    customerInfo = await Purchases.getCustomerInfo();
+    console.log('Customer Info', customerInfo)
+    return !!Object.entries(customerInfo.entitlements.active).length
+}
+
+module.exports = {
+    enableDebugLogs,
+    logInUser,
+    purchase,
+    userHasActiveSubscriptions
+};
