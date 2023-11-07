@@ -23,7 +23,7 @@ const BootSplash = () => {
                     resizeMode:
                         Config.bootsplash.resizeMode, //Bootsplash resizeMode
                 }}
-                source={require('./sources/boot.png')} //Bootsplash image
+                source={require('../sources/boot.png')} //Bootsplash image
             />
         </ParentElement>
     );

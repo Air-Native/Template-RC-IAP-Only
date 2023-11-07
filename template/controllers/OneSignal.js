@@ -2,7 +2,7 @@
 import OneSignal from 'react-native-onesignal';
 import * as Config from '../app.json';
 
-const isInitialized = false;
+let isInitialized = false;
 
 const init = () => {
 	try {

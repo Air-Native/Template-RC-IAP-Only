@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import * as Config from '../app.json';
 
 const ParentElement = Config.appUI.fullScreen ? View : SafeAreaView;

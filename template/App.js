@@ -35,11 +35,6 @@ import * as Config from './app.json';
 OneSignal.init();
 const SecurityInstance = new Security();
 
-/** IN-APP Purchase */
-const Purchases = new RevenueCat(
-	Config.keys.revenueCatAppleApiKey,
-	Config.keys.revenueCatGoogleApiKey
-);
 
 const USER_AGENT =
 	'Mozilla/5.0 (Linux; Android 5.0.1; Nokia 1000 wifi Build/GRK39F) AppleWebKit/533.12 (KHTML, like Gecko)  Chrome/50.0.1011.255 Mobile Safari/600.7';
@@ -82,11 +77,11 @@ class App extends Component {
 	componentDidMount() {
 		if (RevenueCat) {
 			// Включаем логи для отладки
-			Purchases.enableDebugLogs();
+			RevenueCat.enableDebugLogs();
 
 			this.invoke
-				.define('logInUser', Purchases.logInUser)
-				.define('checkUser', Purchases.userHasActiveSubscriptions);
+				.define('logInUser', RevenueCat.logInUser)
+				.define('checkUser', RevenueCat.userHasActiveSubscriptions);
 		}
 
 		/** Player */
@@ -213,6 +208,8 @@ class App extends Component {
 		return true;
 	};
 
+  invoke = createInvoke(() => this.webview);
+
 	/** Извлекаем прямо из бабла функции, тут же можно прописать загрузку файлов в bubble */
 	publishState = this.invoke.bind('publishState');
 	triggerEvent = this.invoke.bind('triggerEvent');
@@ -233,7 +230,7 @@ class App extends Component {
 		GeoLocation.bindFunctions(this.invoke);
 	};
 
-	invoke = createInvoke(() => this.webview);
+	
 
 	onContentProcessDidTerminate = () => this.webview.reload();
 
@@ -296,7 +293,7 @@ class App extends Component {
 						startInLoadingState={true}
 						sharedCookiesEnabled={true}
 						userAgent={USER_AGENT}
-						renderLoading={<BootSplash />}
+						renderLoading={ () => <BootSplash />}
 						source={{
 							uri: Config.appUrl,
 						}}
